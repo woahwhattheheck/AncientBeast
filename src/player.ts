@@ -284,20 +284,19 @@ export class Player {
 	/**
 	 * Test if the player has the greater score.
 	 * Return true if in lead. False if not.
-	 * TODO: This is also wrong, because it allows for ties to result in a "leader".
 	 */
 	isLeader(): boolean {
 		const game = this.game;
+		const score = this.getScore().total;
 
 		for (let i = 0; i < game.gameMode; i++) {
-			// Each player
-			// If someone has a higher score
-			if (game.players[i].getScore().total > this.getScore().total) {
-				return false; // He's not in lead
+			const player = game.players[i];
+			if (player.id !== this.id && player.getScore().total >= score) {
+				return false;
 			}
 		}
 
-		return true; // If nobody has a better score he's in lead
+		return true;
 	}
 
 	/**
