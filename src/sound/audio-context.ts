@@ -33,7 +33,8 @@ export const GESTURE_EVENTS = ['pointerdown', 'touchend', 'keydown'];
  * undefined and falling through to the prefixed constructor.
  */
 export function resolveAudioContextCtor(win?: AudioContextWindow): AudioContextCtor | null {
-	const target = win ?? (typeof window === 'undefined' ? undefined : window);
+	const target: AudioContextWindow | undefined =
+		win ?? (typeof window === 'undefined' ? undefined : (window as AudioContextWindow));
 
 	if (!target) {
 		return null;
