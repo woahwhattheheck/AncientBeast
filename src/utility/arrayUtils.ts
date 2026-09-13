@@ -69,27 +69,30 @@ export function filterCreature(
 	let creatureHexes = [];
 	for (let i = 0; i < hexes.length; i++) {
 		if (hexes[i].creature instanceof Creature) {
-			if (ignoreCreatureTest && ignoreCreatureTest(hexes[i].creature)) {
+			const creature = hexes[i].creature;
+			if (ignoreCreatureTest && ignoreCreatureTest(creature)) {
 				hexes.splice(i, 1);
 				i--;
 				continue;
 			}
 
-			if (!includeCreature || hexes[i].creature.id == id) {
-				if (hexes[i].creature.id == id) {
+			let removedCurrentCreature = false;
+			if (!includeCreature || creature.id == id) {
+				if (creature.id == id) {
 					hexes.splice(i, 1);
 					i--;
 					continue;
 				} else {
 					hexes.splice(i, 1);
 					i--;
+					removedCurrentCreature = true;
 				}
 			} else {
-				creatureHexes = creatureHexes.concat(hexes[i].creature.hexagons);
+				creatureHexes = creatureHexes.concat(creature.hexagons);
 			}
 			if (stopOnCreature) {
 				if (pierceThroughBehavior == 'pierce') {
-					if (isTeam(sourceCreature, hexes[i].creature, targetTeam)) {
+					if (isTeam(sourceCreature, creature, targetTeam)) {
 						piercedCreatures += 1;
 						if (piercedCreatures == pierceNumber) {
 							hexes.splice(i + 1, 99);
@@ -102,14 +105,14 @@ export function filterCreature(
 					break;
 				}
 				if (pierceThroughBehavior == 'targetOnly') {
-					if (isTeam(sourceCreature, hexes[i].creature, targetTeam)) {
+					if (isTeam(sourceCreature, creature, targetTeam)) {
 						piercedCreatures += 1;
 						if (piercedCreatures == pierceNumber) {
 							hexes.splice(i + 1, 99);
 							break;
 						}
 					} else {
-						hexes.splice(i, 99);
+						hexes.splice(i + (removedCurrentCreature ? 1 : 0), 99);
 						break;
 					}
 				}
