@@ -8,6 +8,14 @@ describe('version.full', () => {
 	});
 });
 
+describe('version.pretty', () => {
+	test('preserves all three semantic-version components', () => {
+		expect(version.pretty).toMatch(
+			new RegExp(`^v${version.major}\\.${version.minor}\\.${version.patch}(?:-α)?$`),
+		);
+	});
+});
+
 describe('version.isValid', () => {
 	test('version.isValid(a:string) returns true if a is valid - number.number.number', () => {
 		expect(version.isValid('0.0.0')).toBe(true);
