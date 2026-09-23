@@ -60,7 +60,7 @@ export interface UnitBotStrategy {
 	 * Slots not listed are never tried; the generic guards (used, failed,
 	 * require) still apply per slot.
 	 */
-	getAbilityPriority?(creature: Creature): number[];
+	getAbilityPriority?(creature: Creature, controller: BotController): number[];
 	/**
 	 * Declares how dangerous it is for an attacker to use a given ability
 	 * against this unit. Implemented by the TARGET unit's strategy file so
@@ -249,6 +249,7 @@ export default class BotController {
 		const engagementPressure = Math.max(0, this.getTeamEngagementPressure(creature));
 		return Math.min(10, ageFactor + stagnationFactor + engagementPressure * 1.25);
 	}
+
 	getLateMatchAggressionFactor(creature: Creature): number {
 		const currentTurn = Number(this.game.turn ?? 0);
 		const minimumTurn = Number(this.game.minimumTurnBeforeFleeing ?? 0);
@@ -875,6 +876,7 @@ export default class BotController {
 			const override = strategy.getPreferredX(creature, this);
 			if (override !== undefined) return override;
 		}
+
 		const gridRow = this.game.grid.hexes[0];
 		const boardWidth = gridRow ? gridRow.length - 1 : 15;
 		const flipped = creature.player.flipped;
